@@ -1,13 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mealy/widgets/adaptive_raised_button.dart';
 import 'package:mealy/widgets/main_drawer.dart';
 
 class FiltersScreen extends StatefulWidget {
+  Map<String, dynamic> _filters;
   static const String ROUTENAME = '/filters';
   Function setFilters;
-  Map<String,dynamic> _filter;
 
-  FiltersScreen(this._filter, this.setFilters);
+  FiltersScreen(this._filters, this.setFilters);
 
   @override
   _FiltersScreenState createState() => _FiltersScreenState();
@@ -19,33 +22,28 @@ class _FiltersScreenState extends State<FiltersScreen> {
   bool _vegan = false;
   bool _lactoseFree = false;
 
-
   @override
   void initState() {
     super.initState();
-    _glutenFree = widget._filter['gluten'];
-    _lactoseFree = widget._filter['lactose'];
-    _vegan = widget._filter['vegan'];
-    _vegetarian = widget._filter['vegetarian'];
-
+    _glutenFree = widget._filters['gluten'];
+    _lactoseFree = widget._filters['lactose'];
+    _vegan = widget._filters['vegan'];
+    _vegetarian = widget._filters['vegetarian'];
   }
 
   Widget _buildSwitchTile(
       String title, String subTitle, bool val, Function updateVal) {
-    return SwitchListTile(
-        title: Text(title),
-        subtitle: Text(subTitle),
-        value: val,
-        onChanged: updateVal);
+    return SwitchListTile.adaptive(
+      title: Text(title),
+      subtitle: Text(subTitle),
+      value: val,
+      onChanged: updateVal,
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Filters'),
-      ),
-      body: Column(
+  Widget _buildBody() {
+    return SafeArea(
+      child: Column(
         children: [
           Container(
             padding: EdgeInsets.all(20),
@@ -55,7 +53,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
             ),
           ),
           Expanded(
-            child: ListView(
+            child: Column(
               children: [
                 _buildSwitchTile(
                   'Gluten-Free',
@@ -102,24 +100,37 @@ class _FiltersScreenState extends State<FiltersScreen> {
           ),
           Container(
             margin: EdgeInsets.only(bottom: 25),
-            child: RaisedButton.icon(
-              color: Theme.of(context).primaryColor,
-              textColor: Colors.white,
-              onPressed: () {
+            child: AdaptiveRaisedButton(
+              'Save',
+              () {
                 widget.setFilters({
                   'gluten': _glutenFree,
                   'lactose': _lactoseFree,
                   'vegetarian': _vegetarian,
                   'vegan': _vegan,
                 });
-                Navigator.of(context).pop();
               },
-              icon: Icon(Icons.save),
-              label: Text('Apply'),
             ),
           ),
         ],
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Platform.isAndroid
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text('Filters'),
+            ),
+            body: _buildBody(),
+          )
+        : CupertinoPageScaffold(
+            navigationBar: CupertinoNavigationBar(
+              middle: Text('Filters'),
+            ),
+            child: _buildBody(),
+          );
   }
 }

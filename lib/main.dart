@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     // _initData();
-    return MaterialApp(
+    return  MaterialApp(
       title: 'Mealy',
       theme: ThemeData(
         primarySwatch: Colors.pink,
@@ -105,6 +105,7 @@ class _MyAppState extends State<MyApp> {
         textTheme: ThemeData.light().textTheme.copyWith(
               bodyText1: TextStyle(color: Colors.grey[950]),
               bodyText2: TextStyle(color: Colors.grey[950]),
+              button: TextStyle(color:Colors.white),
               headline6: TextStyle(
                   fontSize: 20,
                   fontFamily: 'RobotoCondensed',
@@ -112,7 +113,7 @@ class _MyAppState extends State<MyApp> {
             ),
       ),
       routes: {
-        '/': (ctx) => TabsScreen(),
+        '/': (ctx) => TabsScreen(_filters, _setFilters),
         CategoryMealsScreen.ROUTENAME: (ctx) =>
             CategoryMealsScreen(_availableMeals),
         MealDetailScreen.ROUTENAME: (ctx) =>

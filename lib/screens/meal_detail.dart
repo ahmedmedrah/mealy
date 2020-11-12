@@ -1,8 +1,13 @@
+import 'dart:io';
+
+import 'package:cupertino_list_tile/cupertino_list_tile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mealy/models/meal_model.dart';
 
 class MealDetailScreen extends StatelessWidget {
   static const String ROUTENAME = '/meal-detail';
+  final isAndroid = Platform.isAndroid;
   Function _addFavorite;
   Function _isFavorite;
 
@@ -32,13 +37,25 @@ class MealDetailScreen extends StatelessWidget {
         child: child);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final meal = ModalRoute.of(context).settings.arguments as Meal;
-    return Scaffold(
-      //Todo cupertino
-      appBar: AppBar(title: Text(meal.title)),
-      body: SingleChildScrollView(
+  Widget _buildListTiles(int index, Meal meal) {
+    return isAndroid
+        ? ListTile(
+            leading: CircleAvatar(
+              child: Text('# ${index + 1}'),
+            ),
+            title: Text(' ${meal.steps[index]}'),
+          )
+        : CupertinoListTile(
+            leading: CircleAvatar(
+              child: Text('# ${index + 1}'),
+            ),
+            title: Text(' ${meal.steps[index]}'),
+          );
+  }
+
+  Widget _buildBody(BuildContext context, Meal meal) {
+    return SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           children: [
             Container(
@@ -71,27 +88,49 @@ class MealDetailScreen extends StatelessWidget {
                   itemCount: meal.steps.length,
                   itemBuilder: (ctx, index) {
                     return Column(children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          child: Text('# ${index + 1}'),
-                        ),
-                        title: Text(' ${meal.steps[index]}'),
-                      ),
-                      Divider(
-                        thickness: 3,
-                      )
+                      _buildListTiles(index, meal),
                     ]);
                   }),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(_isFavorite(meal.id) ? Icons.star : Icons.star_border),
-        onPressed: () async {
-          await _addFavorite(meal.id);
-        },
-      ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final meal = ModalRoute.of(context).settings.arguments as Meal;
+
+    return isAndroid
+        ? Scaffold(
+            //Todo cupertino
+            appBar: AppBar(title: Text(meal.title)),
+            body: _buildBody(context, meal),
+            floatingActionButton: FloatingActionButton(
+              child:
+                  Icon(_isFavorite(meal.id) ? Icons.star : Icons.star_border),
+              onPressed: () async {
+                await _addFavorite(meal.id);
+              },
+            ),
+          )
+        : CupertinoPageScaffold(
+            navigationBar: CupertinoNavigationBar(
+              middle: Text(meal.title),
+              trailing: GestureDetector(
+                child: Icon(
+                  _isFavorite(meal.id)
+                      ? CupertinoIcons.star_fill
+                      : CupertinoIcons.star,
+                  size: 25,
+                ),
+                onTap: () async {
+                  await _addFavorite(meal.id);
+                },
+              ),
+            ),
+            child: _buildBody(context, meal),
+          );
   }
 }

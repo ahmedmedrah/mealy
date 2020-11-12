@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   localstorage: ^3.0.3+6
+  cupertino_list_tile: ^0.1.4
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mealy/dummy_data.dart';
 import 'package:mealy/models/meal_model.dart';
@@ -18,12 +21,20 @@ class CategoryMealsScreen extends StatelessWidget {
     final categoryMeals = _availableMeals
         .where((element) => element.categories.contains(categoryId))
         .toList();
-    return Scaffold(
-      //Todo cupertino
+    return Platform.isAndroid ? Scaffold(
       appBar: AppBar(
         title: Text(categoryTitle),
       ),
       body: ListView.builder(
+          itemCount: categoryMeals.length,
+          itemBuilder: (ctx, index) {
+            return MealItem(categoryMeals[index]);
+          }),
+    ) : CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(categoryTitle),
+      ),
+      child: ListView.builder(
           itemCount: categoryMeals.length,
           itemBuilder: (ctx, index) {
             return MealItem(categoryMeals[index]);
