@@ -5,6 +5,9 @@ import 'package:mealy/widgets/meal_item.dart';
 
 class CategoryMealsScreen extends StatelessWidget {
   static const ROUTENAME = '/category-meals';
+  final List<Meal> _availableMeals ;
+
+  CategoryMealsScreen(this._availableMeals);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +15,7 @@ class CategoryMealsScreen extends StatelessWidget {
         ModalRoute.of(context).settings.arguments as Map<String, String>;
     final categoryTitle = routeArgs['title'];
     final categoryId = routeArgs['id'];
-    final categoryMeals = DUMMY_MEALS
+    final categoryMeals = _availableMeals
         .where((element) => element.categories.contains(categoryId))
         .toList();
     return Scaffold(
