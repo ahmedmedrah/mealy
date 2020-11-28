@@ -2,6 +2,10 @@
 
 Meals recipes application
 
+![Alt text](screenshots/1.png?raw=true "Home")
+![Alt text](screenshots/2.png?raw=true "Category screen")
+![Alt text](screenshots/3.png?raw=true "Meal Screen")
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
