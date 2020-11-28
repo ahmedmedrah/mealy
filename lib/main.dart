@@ -31,7 +31,6 @@ class _MyAppState extends State<MyApp> {
   List<Meal> _availableMeals = DUMMY_MEALS;
   List<Meal> _favoritesMeals = [];
 
-
   _setLocalStorage(String name, Map data) async {
     await store.ready; // Make sure store is ready
     store.setItem(name, data);
@@ -43,15 +42,12 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-
-
   void _initData() async {
     await store.ready;
     _filters = store.getItem('filters') ?? _filters;
   }
 
-
-  _setFilters(Map<String, bool> filtersData){
+  _setFilters(Map<String, bool> filtersData) {
     setState(() {
       _filters = filtersData;
       _setLocalStorage('filters', _filters);
@@ -69,7 +65,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void _toggleFavorites(String mealId){
+  void _toggleFavorites(String mealId) {
     final existingIndex =
         _favoritesMeals.indexWhere((meal) => meal.id == mealId);
     if (existingIndex >= 0) {
@@ -95,7 +91,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     // _initData();
-    return  MaterialApp(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Mealy',
       theme: ThemeData(
         primarySwatch: Colors.pink,
@@ -105,11 +102,12 @@ class _MyAppState extends State<MyApp> {
         textTheme: ThemeData.light().textTheme.copyWith(
               bodyText1: TextStyle(color: Colors.grey[950]),
               bodyText2: TextStyle(color: Colors.grey[950]),
-              button: TextStyle(color:Colors.white),
+              button: TextStyle(color: Colors.white),
               headline6: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'RobotoCondensed',
-                  fontWeight: FontWeight.bold),
+                fontSize: 20,
+                fontFamily: 'RobotoCondensed',
+                fontWeight: FontWeight.bold,
+              ),
             ),
       ),
       routes: {
